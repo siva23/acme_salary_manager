@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_06_074141) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_06_100517) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -38,10 +38,35 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_06_074141) do
     t.index ["name"], name: "index_departments_on_name", unique: true
   end
 
+  create_table "employees", force: :cascade do |t|
+    t.string "employee_number", null: false
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "email", null: false
+    t.bigint "country_id", null: false
+    t.bigint "department_id", null: false
+    t.bigint "job_level_id", null: false
+    t.string "job_title", null: false
+    t.string "employment_status", null: false
+    t.date "joining_date", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["country_id"], name: "index_employees_on_country_id"
+    t.index ["department_id"], name: "index_employees_on_department_id"
+    t.index ["email"], name: "index_employees_on_email", unique: true
+    t.index ["employee_number"], name: "index_employees_on_employee_number", unique: true
+    t.index ["employment_status"], name: "index_employees_on_employment_status"
+    t.index ["job_level_id"], name: "index_employees_on_job_level_id"
+  end
+
   create_table "job_levels", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_job_levels_on_name", unique: true
   end
+
+  add_foreign_key "employees", "countries"
+  add_foreign_key "employees", "departments"
+  add_foreign_key "employees", "job_levels"
 end
