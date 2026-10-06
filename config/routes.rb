@@ -13,6 +13,8 @@ Rails.application.routes.draw do
       resources :employees, only: [:index, :show] do
         resources :compensation_records, only: [:index]
       end
+
+      resources :departments, only: [:index]
     end
   end
 end
