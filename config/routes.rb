@@ -10,12 +10,12 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :employees, only: [:index, :show] do
-        resources :compensation_records, only: [:index]
+      resources :employees, only: [ :index, :show ] do
+        resources :compensation_records, only: [ :index ]
       end
 
-      resources :departments, only: [:index]
-      resources :countries, only: [:index]
+      resources :departments, only: [ :index ]
+      resources :countries, only: [ :index ]
 
       namespace :reports do
         get :salary, to: "salary#index"

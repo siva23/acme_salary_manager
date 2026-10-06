@@ -11,6 +11,6 @@ class CreateCompensationRecords < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :compensation_records, [:employee_id, :effective_from]
+    add_index :compensation_records, [ :employee_id, :effective_from ]
   end
 end

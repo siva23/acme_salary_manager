@@ -5,7 +5,7 @@ class CreateJobLevels < ActiveRecord::Migration[8.1]
 
       t.timestamps
     end
-    
+
     add_index :job_levels, :name, unique: true
   end
 end

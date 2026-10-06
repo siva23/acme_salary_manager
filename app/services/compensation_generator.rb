@@ -30,7 +30,7 @@ class CompensationGenerator
     currency = currencies[index % currencies.length]
 
     while current_start < today
-      next_start = [current_start.next_year, today].min
+      next_start = [ current_start.next_year, today ].min
 
       CompensationRecord.create!(
         employee: employee,

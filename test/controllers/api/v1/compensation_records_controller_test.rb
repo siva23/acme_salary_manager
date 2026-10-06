@@ -89,7 +89,7 @@ class Api::V1::CompensationRecordsControllerTest < ActionDispatch::IntegrationTe
 
     effective_dates = body["compensation"].map { |record| record["effective_from"] }
 
-    assert_equal ["2020-01-01", "2021-01-01"], effective_dates
+    assert_equal [ "2020-01-01", "2021-01-01" ], effective_dates
   end
 
   test "returns not found for an unknown employee" do
