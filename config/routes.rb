@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       end
 
       resources :departments, only: [:index]
+      resources :countries, only: [:index]
     end
   end
 end
