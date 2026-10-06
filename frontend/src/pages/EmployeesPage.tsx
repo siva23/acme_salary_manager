@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { fetchEmployees } from '../api/employees'
 import type { Employee } from '../types/employee'
+import { Link } from 'react-router-dom'
 
 function EmployeesPage() {
   const [employees, setEmployees] = useState<Employee[]>([])
@@ -52,9 +53,11 @@ function EmployeesPage() {
               {employees.map((employee) => (
                 <tr key={employee.id}>
                   <td>
-                    <strong>
-                      {employee.first_name} {employee.last_name}
-                    </strong>
+                    <Link to={`/employees/${employee.id}`}>
+                      <strong>
+                        {employee.first_name} {employee.last_name}
+                      </strong>
+                    </Link>
                     <span>{employee.employee_number}</span>
                   </td>
                   <td>{employee.job_title}</td>

@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom'
 import './App.css'
 import EmployeesPage from './pages/EmployeesPage'
+import EmployeeDetailsPage from './pages/EmployeeDetailsPage'
 
 function App() {
   return (
@@ -67,6 +68,7 @@ function App() {
               />
 
               <Route path="/employees" element={<EmployeesPage />} />
+              <Route path="/employees/:id" element={<EmployeeDetailsPage />} />
             </Routes>
           </main>
         </div>
