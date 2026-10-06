@@ -50,6 +50,7 @@ acme_salary_manager/
     ├── public/
     └── package.json
 
+```
 
 ## Core Features
 - Employee listing
@@ -114,5 +115,6 @@ npm run dev
 
 http://localhost:5173
 
-Here are the few screens of application UI 
-<img width="1615" height="898" alt="image" src="https://github.com/user-attachments/assets/659b1808-4f4f-4616-a9ad-d4f669ccdc38" />
+Here are the UI screens for reference
+
+![ACME HR employee directory showing employee names, job titles, departments, countries, and statuses](image.png)
