@@ -10,9 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_06_100517) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_06_102035) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "compensation_records", force: :cascade do |t|
+    t.bigint "employee_id", null: false
+    t.bigint "currency_id", null: false
+    t.decimal "annual_base_salary", precision: 15, scale: 2, null: false
+    t.date "effective_from", null: false
+    t.date "effective_to"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["currency_id"], name: "index_compensation_records_on_currency_id"
+    t.index ["employee_id", "effective_from"], name: "index_compensation_records_on_employee_id_and_effective_from"
+    t.index ["employee_id"], name: "index_compensation_records_on_employee_id"
+  end
 
   create_table "countries", force: :cascade do |t|
     t.string "name", null: false
@@ -66,6 +79,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_06_100517) do
     t.index ["name"], name: "index_job_levels_on_name", unique: true
   end
 
+  add_foreign_key "compensation_records", "currencies"
+  add_foreign_key "compensation_records", "employees"
   add_foreign_key "employees", "countries"
   add_foreign_key "employees", "departments"
   add_foreign_key "employees", "job_levels"
