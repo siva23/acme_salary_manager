@@ -19,6 +19,7 @@ Rails.application.routes.draw do
 
       namespace :reports do
         get :salary, to: "salary#index"
+        get :headcount, to: "headcount#index"
       end
     end
   end
