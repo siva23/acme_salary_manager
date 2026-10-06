@@ -60,40 +60,38 @@ class Api::V1::EmployeesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "returns an employee with related information" do
-		employee = Employee.first
+    employee = Employee.first
+    get "/api/v1/employees/#{employee.id}"
 
-		get "/api/v1/employees/#{employee.id}"
+    assert_response :success
 
-		assert_response :success
+    body = JSON.parse(response.body)
+    expected_hash = {
+      "id" => employee.id,
+      "employee_number" => employee.employee_number,
+      "first_name" => employee.first_name,
+      "last_name" => employee.last_name,
+      "email" => employee.email,
+      "job_title" => employee.job_title,
+      "employment_status" => employee.employment_status,
+      "joining_date" => employee.joining_date.to_s,
+      "country" => {
+        "id" => employee.country.id,
+        "name" => employee.country.name,
+        "iso_code" => employee.country.iso_code
+      },
+      "department" => {
+        "id" => employee.department.id,
+        "name" => employee.department.name
+      },
+      "job_level" => {
+        "id" => employee.job_level.id,
+        "name" => employee.job_level.name
+      }
+    }
 
-		body = JSON.parse(response.body)
-
-		expected_hash = {
-			"id" => employee.id,
-			"employee_number" => employee.employee_number,
-			"first_name" => employee.first_name,
-			"last_name" => employee.last_name,
-			"email" => employee.email,
-			"job_title" => employee.job_title,
-			"employment_status" => employee.employment_status,
-			"joining_date" => employee.joining_date.to_s,
-			"country" => {
-				"id" => employee.country.id,
-				"name" => employee.country.name,
-				"iso_code" => employee.country.iso_code
-			},
-			"department" => {
-				"id" => employee.department.id,
-				"name" => employee.department.name
-			},
-			"job_level" => {
-				"id" => employee.job_level.id,
-				"name" => employee.job_level.name
-			}
-		}
-
-		assert_equal expected_hash, body
-	end
+    assert_equal expected_hash, body
+  end
 
   test "returns not found for an unknown employee" do
     get "/api/v1/employees/999999"
