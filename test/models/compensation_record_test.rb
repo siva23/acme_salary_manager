@@ -113,4 +113,63 @@ class CompensationRecordTest < ActiveSupport::TestCase
 
     assert compensation.valid?
   end
+
+  test "prevents overlapping compensation periods for the same employee" do
+    CompensationRecord.create!(
+      @compensation_attributes.merge(
+        effective_from: Date.new(2024, 1, 1),
+        effective_to: Date.new(2024, 12, 31)
+      )
+    )
+
+    overlapping = CompensationRecord.new(
+      @compensation_attributes.merge(
+        effective_from: Date.new(2024, 6, 1),
+        effective_to: Date.new(2025, 1, 31)
+      )
+    )
+
+    assert_raises(ActiveRecord::StatementInvalid) do
+      overlapping.save!
+    end
+  end
+
+  test "allows adjacent compensation periods for the same employee" do
+    CompensationRecord.create!(
+      @compensation_attributes.merge(
+        effective_from: Date.new(2024, 1, 1),
+        effective_to: Date.new(2024, 12, 31)
+      )
+    )
+
+    adjacent = CompensationRecord.new(
+      @compensation_attributes.merge(
+        effective_from: Date.new(2024, 12, 31),
+        effective_to: Date.new(2025, 12, 31)
+      )
+    )
+
+    assert adjacent.valid?
+    assert_nothing_raised { adjacent.save! }
+  end
+
+  test "prevents a new compensation period after an open-ended current record" do
+    CompensationRecord.create!(
+      @compensation_attributes.merge(
+        effective_from: Date.new(2024, 1, 1),
+        effective_to: nil
+      )
+    )
+
+    overlapping = CompensationRecord.new(
+      @compensation_attributes.merge(
+        effective_from: Date.new(2025, 1, 1),
+        effective_to: nil
+      )
+    )
+
+    assert_raises(ActiveRecord::StatementInvalid) do
+      overlapping.save!
+    end
+  end
 end
