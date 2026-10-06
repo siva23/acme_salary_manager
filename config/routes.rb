@@ -16,6 +16,10 @@ Rails.application.routes.draw do
 
       resources :departments, only: [:index]
       resources :countries, only: [:index]
+
+      namespace :reports do
+        get :salary, to: "salary#index"
+      end
     end
   end
 end
