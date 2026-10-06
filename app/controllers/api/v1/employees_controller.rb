@@ -15,7 +15,31 @@ class Api::V1::EmployeesController < ApplicationController
     total = Employee.count
 
     render json: {
-      employees: employees,
+      employees: employees.map do |employee|
+        {
+          id: employee.id,
+          employee_number: employee.employee_number,
+          first_name: employee.first_name,
+          last_name: employee.last_name,
+          email: employee.email,
+          job_title: employee.job_title,
+          employment_status: employee.employment_status,
+          joining_date: employee.joining_date,
+          country: {
+            id: employee.country.id,
+            name: employee.country.name,
+            iso_code: employee.country.iso_code
+          },
+          department: {
+            id: employee.department.id,
+            name: employee.department.name
+          },
+          job_level: {
+            id: employee.job_level.id,
+            name: employee.job_level.name
+          }
+        }
+      end,
       pagination: {
         page: page,
         per_page: per_page,

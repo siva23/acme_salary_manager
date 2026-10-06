@@ -34,6 +34,16 @@ class Api::V1::EmployeesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 25, body["pagination"]["per_page"]
     assert_equal 30, body["pagination"]["total"]
     assert_equal 2, body["pagination"]["total_pages"]
+
+  employee = body["employees"].first
+
+  assert_equal "EMP-0001", employee["employee_number"]
+  assert_equal "First1", employee["first_name"]
+  assert_equal "Last1", employee["last_name"]
+  assert_equal "India", employee["country"]["name"]
+  assert_equal "IN", employee["country"]["iso_code"]
+  assert_equal "Engineering", employee["department"]["name"]
+  assert_equal "Senior", employee["job_level"]["name"]
   end
 
   test "returns the requested page and page size" do
