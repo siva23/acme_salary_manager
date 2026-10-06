@@ -63,3 +63,13 @@ currencies.each do |attributes|
     currency.symbol = attributes[:symbol]
   end
 end
+
+employee_count = Integer(ENV.fetch("EMPLOYEE_COUNT", "100"))
+
+puts "Generating #{employee_count} employees..."
+EmployeeGenerator.generate(count: employee_count)
+
+puts "Generating compensation history..."
+CompensationGenerator.generate
+
+puts "Seed completed."
