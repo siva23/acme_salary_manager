@@ -18,10 +18,17 @@ class EmployeeTest < ActiveSupport::TestCase
       employment_status: "active",
       joining_date: Date.new(2024, 1, 15)
     }
+
+    @employee = Employee.create!(@employee_attributes)
   end
 
   test "is valid with all required attributes" do
-    employee = Employee.new(@employee_attributes)
+    employee = Employee.new(
+      @employee_attributes.merge(
+        employee_number: "EMP-1002",
+        email: "valid@example.com"
+      )
+    )
 
     assert employee.valid?
   end
@@ -34,7 +41,6 @@ class EmployeeTest < ActiveSupport::TestCase
   end
 
   test "requires a unique employee number" do
-    Employee.create!(@employee_attributes)
     duplicate = Employee.new(@employee_attributes.merge(email: "another@example.com"))
 
     assert_not duplicate.valid?
@@ -49,7 +55,6 @@ class EmployeeTest < ActiveSupport::TestCase
   end
 
   test "requires a unique email" do
-    Employee.create!(@employee_attributes)
     duplicate = Employee.new(
       @employee_attributes.merge(employee_number: "EMP-1002")
     )
@@ -68,19 +73,37 @@ class EmployeeTest < ActiveSupport::TestCase
   end
 
   test "accepts active employment status" do
-    employee = Employee.new(@employee_attributes.merge(employment_status: "active"))
+    employee = Employee.new(
+      @employee_attributes.merge(
+        employee_number: "EMP-1002",
+        email: "active@example.com",
+        employment_status: "active"
+      )
+    )
 
     assert employee.valid?
   end
 
   test "accepts inactive employment status" do
-    employee = Employee.new(@employee_attributes.merge(employment_status: "inactive"))
+    employee = Employee.new(
+      @employee_attributes.merge(
+        employee_number: "EMP-1003",
+        email: "inactive@example.com",
+        employment_status: "inactive"
+      )
+    )
 
     assert employee.valid?
   end
 
   test "accepts terminated employment status" do
-    employee = Employee.new(@employee_attributes.merge(employment_status: "terminated"))
+    employee = Employee.new(
+      @employee_attributes.merge(
+        employee_number: "EMP-1004",
+        email: "terminated@example.com",
+        employment_status: "terminated"
+      )
+    )
 
     assert employee.valid?
   end
@@ -104,5 +127,51 @@ class EmployeeTest < ActiveSupport::TestCase
 
     assert_not employee.valid?
     assert_includes employee.errors[:job_level], "must exist"
+  end
+
+  test "can have multiple compensation records" do
+    CompensationRecord.create!(
+      employee: @employee,
+      currency: Currency.create!(
+        code: "USD",
+        name: "US Dollar",
+        symbol: "$"
+      ),
+      annual_base_salary: BigDecimal("80000.00"),
+      effective_from: Date.new(2024, 1, 1),
+      effective_to: Date.new(2024, 12, 31)
+    )
+
+    CompensationRecord.create!(
+      employee: @employee,
+      currency: Currency.create!(
+        code: "EUR",
+        name: "Euro",
+        symbol: "€"
+      ),
+      annual_base_salary: BigDecimal("85000.00"),
+      effective_from: Date.new(2025, 1, 1)
+    )
+
+    assert_equal 2, @employee.compensation_records.count
+  end
+
+  test "prevents deleting an employee with compensation records" do
+    CompensationRecord.create!(
+      employee: @employee,
+      currency: Currency.create!(
+        code: "USD",
+        name: "US Dollar",
+        symbol: "$"
+      ),
+      annual_base_salary: BigDecimal("80000.00"),
+      effective_from: Date.new(2024, 1, 1)
+    )
+
+    assert_raises(ActiveRecord::DeleteRestrictionError) do
+      @employee.destroy!
+    end
+
+    assert Employee.exists?(@employee.id)
   end
 end
