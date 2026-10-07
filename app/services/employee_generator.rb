@@ -1,5 +1,7 @@
 class EmployeeGenerator
   STATUSES = %w[active inactive terminated].freeze
+  JOINING_DATE_START = Date.new(2016, 1, 1)
+  JOINING_DATE_RANGE = 3650
 
   FIRST_NAMES = %w[
     John
@@ -63,7 +65,7 @@ class EmployeeGenerator
         job_level: job_levels[(number - 1) % job_levels.length],
         job_title: job_title_for(job_levels[(number - 1) % job_levels.length]),
         employment_status: STATUSES[(number - 1) % STATUSES.length],
-        joining_date: Date.new(2018, 1, 1) + ((number - 1) * 30)
+        joining_date: JOINING_DATE_START + ((number - 1) % JOINING_DATE_RANGE)
       )
     end
   end
