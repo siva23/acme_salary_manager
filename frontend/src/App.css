@@ -262,3 +262,37 @@
     grid-template-columns: 1fr;
   }
 }
+
+.salary-table-wrapper {
+  overflow-x: auto;
+}
+
+.salary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.salary-table th,
+.salary-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.salary-table th {
+  font-weight: 600;
+  background: #f8fafc;
+}
+
+.salary-table th:nth-child(3),
+.salary-table th:nth-child(4),
+.salary-table td:nth-child(3),
+.salary-table td:nth-child(4) {
+  text-align: right;
+}
+
+.salary-table tbody tr:hover {
+  background: #f8fafc;
+}
