@@ -6,9 +6,9 @@ class CompensationGeneratorTest < ActiveSupport::TestCase
     @department = Department.create!(name: "Engineering")
     @job_level = JobLevel.create!(name: "Senior")
     @currency = Currency.create!(
-      code: "USD",
-      name: "US Dollar",
-      symbol: "$"
+      code: "INR",
+      name: "Indian Rupee",
+      symbol: "₹"
     )
   end
 
