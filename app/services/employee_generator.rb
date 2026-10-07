@@ -61,7 +61,7 @@ class EmployeeGenerator
         last_name: LAST_NAMES[(number - 1) % LAST_NAMES.length],
         email: format("employee%04d@example.com", number),
         country: countries[(number - 1) % countries.length],
-        department: departments[(number - 1) % departments.length],
+        department: departments[((number - 1) / countries.length) % departments.length],
         job_level: job_levels[(number - 1) % job_levels.length],
         job_title: job_title_for(job_levels[(number - 1) % job_levels.length]),
         employment_status: STATUSES[(number - 1) % STATUSES.length],
