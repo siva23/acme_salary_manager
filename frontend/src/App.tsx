@@ -7,6 +7,7 @@ import {
 import './App.css'
 import EmployeesPage from './pages/EmployeesPage'
 import EmployeeDetailsPage from './pages/EmployeeDetailsPage'
+import DashboardPage from './pages/DashboardPage'
 
 function App() {
   return (
@@ -55,17 +56,7 @@ function App() {
 
           <main className="main-content">
             <Routes>
-              <Route
-                path="/"
-                element={
-                  <>
-                    <h1>Dashboard</h1>
-                    <p>
-                      Welcome to the ACME HR salary management system.
-                    </p>
-                  </>
-                }
-              />
+              <Route path="/" element={<DashboardPage />} />
 
               <Route path="/employees" element={<EmployeesPage />} />
               <Route path="/employees/:id" element={<EmployeeDetailsPage />} />
