@@ -35,7 +35,14 @@ function SalaryTooltip({ active, payload }: SalaryTooltipProps) {
   return (
     <div className="chart-tooltip">
       <strong>{data.name}</strong>
-      <span>Average salary: {data.average_salary.toLocaleString()}</span>
+      <span>
+        Average salary:{' '}
+        {new Intl.NumberFormat(undefined, {
+          style: 'currency',
+          currency: data.currency,
+          maximumFractionDigits: 0,
+        }).format(data.average_salary)}
+      </span>
       <span>Employees: {data.employee_count}</span>
       <span>Currency: {data.currency}</span>
     </div>
@@ -63,37 +70,37 @@ function DashboardPage() {
   }, [])
 
   const countrySalaryData = useMemo<SalaryChartData[]>(() => {
-		const grouped = new Map<string, SalaryChartData>()
+    const grouped = new Map<string, SalaryChartData>()
 
-		reports.forEach((report) => {
-			const existing = grouped.get(report.country)
-			const employeeCount = report.employee_count
-			const averageSalary = Number(report.average_salary)
+    reports.forEach((report) => {
+      const employeeCount = report.employee_count
+      const averageSalary = Number(report.average_salary)
+      const existing = grouped.get(report.country)
 
-			if (!existing) {
-				grouped.set(report.country, {
-					name: `${report.country} (${report.currency})`,
-					average_salary: averageSalary,
-					employee_count: employeeCount,
-					currency: report.currency,
-				})
-				return
-			}
+      if (!existing) {
+        grouped.set(report.country, {
+          name: report.country,
+          average_salary: averageSalary,
+          employee_count: employeeCount,
+          currency: report.currency,
+        })
+        return
+      }
 
-			const totalEmployees = existing.employee_count + employeeCount
-			const weightedAverage =
-				(existing.average_salary * existing.employee_count +
-					averageSalary * employeeCount) /
-				totalEmployees
+      const totalEmployees = existing.employee_count + employeeCount
 
-			existing.average_salary = weightedAverage
-			existing.employee_count = totalEmployees
-		})
+      existing.average_salary =
+        (existing.average_salary * existing.employee_count +
+          averageSalary * employeeCount) /
+        totalEmployees
 
-		return Array.from(grouped.values()).sort(
-			(a, b) => b.average_salary - a.average_salary,
-		)
-	}, [reports])
+      existing.employee_count = totalEmployees
+    })
+
+    return Array.from(grouped.values()).sort(
+      (a, b) => b.average_salary - a.average_salary,
+    )
+  }, [reports])
 
   const departmentSalaryData = useMemo<SalaryChartData[]>(() => {
     return reports
@@ -132,16 +139,18 @@ function DashboardPage() {
 
           <div className="dashboard-chart">
             <ResponsiveContainer width="100%" height={360}>
-              <BarChart data={countrySalaryData}>
+              <BarChart
+                layout="vertical"
+                data={countrySalaryData}
+                margin={{ top: 8, right: 24, left: 16, bottom: 8 }}
+              >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
+                <XAxis type="number" />
+                <YAxis
+                  type="category"
                   dataKey="name"
-                  angle={-35}
-                  textAnchor="end"
-                  height={80}
-                  interval={0}
+                  width={90}
                 />
-                <YAxis />
                 <Tooltip content={<SalaryTooltip />} />
                 <Bar dataKey="average_salary" name="Average salary" />
               </BarChart>
