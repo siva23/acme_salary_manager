@@ -164,22 +164,33 @@ function DashboardPage() {
             <span>Current compensation</span>
           </div>
 
-          <div className="dashboard-chart">
-            <ResponsiveContainer width="100%" height={360}>
-              <BarChart data={departmentSalaryData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="name"
-                  angle={-35}
-                  textAnchor="end"
-                  height={80}
-                  interval={0}
-                />
-                <YAxis />
-                <Tooltip content={<SalaryTooltip />} />
-                <Bar dataKey="average_salary" name="Average salary" />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="salary-table-wrapper">
+            <table className="salary-table">
+              <thead>
+                <tr>
+                  <th>Department</th>
+                  <th>Currency</th>
+                  <th>Employees</th>
+                  <th>Average Salary</th>
+                </tr>
+              </thead>
+              <tbody>
+                {departmentSalaryData.map((row) => (
+                  <tr key={`${row.name}-${row.currency}`}>
+                    <td>{row.name.replace(` (${row.currency})`, '')}</td>
+                    <td>{row.currency}</td>
+                    <td>{row.employee_count}</td>
+                    <td>
+                      {new Intl.NumberFormat(undefined, {
+                        style: 'currency',
+                        currency: row.currency,
+                        maximumFractionDigits: 0,
+                      }).format(row.average_salary)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </section>
       </div>
